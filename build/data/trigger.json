@@ -1,0 +1,7 @@
+{
+	"server": {
+		"cell": "cell01",
+		"unit": "unit01",
+		"port": 6666
+	}
+}
