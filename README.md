@@ -1,10 +1,15 @@
 ## Introduction
 httpt is a condensed name of http trigger. It can provide http service to the outside.
 In this trigger, it provides the features as below:
+
 (1) Bindable http API with cli and console;
+
 (2) Pluggable account service;
+
 (3) Pluggable securiry service;
+
 (4) Pluggable flow-control service;
+
 (5) Pluggable fault-tolerance service.
 
 ## Build
