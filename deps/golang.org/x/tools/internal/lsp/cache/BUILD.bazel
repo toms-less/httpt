@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cache",
+    srcs = [
+        "cache.go",
+        "check.go",
+        "external.go",
+        "file.go",
+        "gofile.go",
+        "load.go",
+        "modfile.go",
+        "parse.go",
+        "pkg.go",
+        "session.go",
+        "sumfile.go",
+        "token.go",
+        "view.go",
+        "watcher.go",
+    ],
+    importpath = "golang.org/x/tools/internal/lsp/cache",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/packages",
+        "//deps/golang.org/x/tools/internal/lsp/debug",
+        "//deps/golang.org/x/tools/internal/lsp/source",
+        "//deps/golang.org/x/tools/internal/lsp/telemetry/trace",
+        "//deps/golang.org/x/tools/internal/lsp/xlog",
+        "//deps/golang.org/x/tools/internal/memoize",
+        "//deps/golang.org/x/tools/internal/span",
+    ],
+)

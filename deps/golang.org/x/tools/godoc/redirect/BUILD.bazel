@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "redirect",
+    srcs = [
+        "hash.go",
+        "redirect.go",
+        "rietveld.go",
+    ],
+    importpath = "golang.org/x/tools/godoc/redirect",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/net/context/ctxhttp"],
+)
+
+go_test(
+    name = "redirect_test",
+    srcs = ["redirect_test.go"],
+    embed = [":redirect"],
+)

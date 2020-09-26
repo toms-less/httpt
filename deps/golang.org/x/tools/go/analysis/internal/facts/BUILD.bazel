@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "facts",
+    srcs = [
+        "facts.go",
+        "imports.go",
+    ],
+    importpath = "golang.org/x/tools/go/analysis/internal/facts",
+    visibility = ["//deps/golang.org/x/tools/go/analysis:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/types/objectpath",
+    ],
+)
+
+go_test(
+    name = "facts_test",
+    srcs = ["facts_test.go"],
+    embed = [":facts"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis/analysistest",
+        "//deps/golang.org/x/tools/go/packages",
+    ],
+)

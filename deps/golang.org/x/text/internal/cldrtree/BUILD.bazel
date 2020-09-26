@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "cldrtree",
+    srcs = [
+        "cldrtree.go",
+        "generate.go",
+        "option.go",
+        "tree.go",
+        "type.go",
+    ],
+    importpath = "golang.org/x/text/internal/cldrtree",
+    visibility = ["//deps/golang.org/x/text:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/text/internal/gen",
+        "//deps/golang.org/x/text/internal/language/compact",
+        "//deps/golang.org/x/text/language",
+        "//deps/golang.org/x/text/unicode/cldr",
+    ],
+)
+
+go_test(
+    name = "cldrtree_test",
+    srcs = ["cldrtree_test.go"],
+    embed = [":cldrtree"],
+    deps = [
+        "//deps/golang.org/x/text/internal/gen",
+        "//deps/golang.org/x/text/internal/language/compact",
+        "//deps/golang.org/x/text/language",
+        "//deps/golang.org/x/text/unicode/cldr",
+    ],
+)

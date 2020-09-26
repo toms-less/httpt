@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "module",
+    srcs = ["module.go"],
+    importpath = "golang.org/x/tools/internal/module",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = ["//deps/golang.org/x/tools/internal/semver"],
+)
+
+go_test(
+    name = "module_test",
+    srcs = ["module_test.go"],
+    embed = [":module"],
+)

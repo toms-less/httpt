@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "copylock",
+    srcs = ["copylock.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/copylock",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/analysis/passes/internal/analysisutil",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+    ],
+)
+
+go_test(
+    name = "copylock_test",
+    srcs = ["copylock_test.go"],
+    embed = [":copylock"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

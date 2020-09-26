@@ -1,0 +1,32 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "autocert",
+    srcs = [
+        "autocert.go",
+        "cache.go",
+        "listener.go",
+        "renewal.go",
+    ],
+    importpath = "golang.org/x/crypto/acme/autocert",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/crypto/acme",
+        "//deps/golang.org/x/net/idna",
+    ],
+)
+
+go_test(
+    name = "autocert_test",
+    srcs = [
+        "autocert_test.go",
+        "cache_test.go",
+        "example_test.go",
+        "renewal_test.go",
+    ],
+    embed = [":autocert"],
+    deps = [
+        "//deps/golang.org/x/crypto/acme",
+        "//deps/golang.org/x/crypto/acme/autocert/internal/acmetest",
+    ],
+)

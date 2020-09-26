@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "gcimporter",
+    srcs = [
+        "bexport.go",
+        "bimport.go",
+        "exportdata.go",
+        "gcimporter.go",
+        "iexport.go",
+        "iimport.go",
+        "newInterface10.go",
+        "newInterface11.go",
+    ],
+    importpath = "golang.org/x/tools/go/internal/gcimporter",
+    visibility = ["//deps/golang.org/x/tools/go:__subpackages__"],
+)
+
+go_test(
+    name = "gcimporter_test",
+    srcs = [
+        "bexport_test.go",
+        "gcimporter11_test.go",
+        "gcimporter_test.go",
+        "iexport_test.go",
+        "israce_test.go",
+    ],
+    embed = [":gcimporter"],
+    deps = [
+        "//deps/golang.org/x/tools/go/buildutil",
+        "//deps/golang.org/x/tools/go/loader",
+    ],
+)

@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "pprofhandler",
+    srcs = ["pprof.go"],
+    importpath = "github.com/valyala/fasthttp/pprofhandler",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/github.com/valyala/fasthttp",
+        "//deps/github.com/valyala/fasthttp/fasthttpadaptor",
+    ],
+)

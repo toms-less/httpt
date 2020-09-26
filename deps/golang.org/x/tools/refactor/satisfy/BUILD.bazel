@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "satisfy",
+    srcs = ["find.go"],
+    importpath = "golang.org/x/tools/refactor/satisfy",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/ast/astutil",
+        "//deps/golang.org/x/tools/go/types/typeutil",
+    ],
+)

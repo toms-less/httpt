@@ -1,0 +1,40 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "ianaindex",
+    srcs = [
+        "ianaindex.go",
+        "tables.go",
+    ],
+    importpath = "golang.org/x/text/encoding/ianaindex",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/text/encoding",
+        "//deps/golang.org/x/text/encoding/charmap",
+        "//deps/golang.org/x/text/encoding/internal/identifier",
+        "//deps/golang.org/x/text/encoding/japanese",
+        "//deps/golang.org/x/text/encoding/korean",
+        "//deps/golang.org/x/text/encoding/simplifiedchinese",
+        "//deps/golang.org/x/text/encoding/traditionalchinese",
+        "//deps/golang.org/x/text/encoding/unicode",
+    ],
+)
+
+go_test(
+    name = "ianaindex_test",
+    srcs = [
+        "example_test.go",
+        "ianaindex_test.go",
+    ],
+    embed = [":ianaindex"],
+    deps = [
+        "//deps/golang.org/x/text/encoding",
+        "//deps/golang.org/x/text/encoding/charmap",
+        "//deps/golang.org/x/text/encoding/internal/identifier",
+        "//deps/golang.org/x/text/encoding/japanese",
+        "//deps/golang.org/x/text/encoding/korean",
+        "//deps/golang.org/x/text/encoding/simplifiedchinese",
+        "//deps/golang.org/x/text/encoding/traditionalchinese",
+        "//deps/golang.org/x/text/encoding/unicode",
+    ],
+)

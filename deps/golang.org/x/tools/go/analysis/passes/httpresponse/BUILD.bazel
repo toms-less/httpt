@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "httpresponse",
+    srcs = ["httpresponse.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/httpresponse",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+    ],
+)
+
+go_test(
+    name = "httpresponse_test",
+    srcs = ["httpresponse_test.go"],
+    embed = [":httpresponse"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

@@ -1,0 +1,53 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "godoc",
+    srcs = [
+        "corpus.go",
+        "dirtrees.go",
+        "format.go",
+        "godoc.go",
+        "index.go",
+        "linkify.go",
+        "meta.go",
+        "page.go",
+        "parser.go",
+        "pres.go",
+        "search.go",
+        "server.go",
+        "snippet.go",
+        "spec.go",
+        "spot.go",
+        "tab.go",
+        "template.go",
+        "versions.go",
+    ],
+    importpath = "golang.org/x/tools/godoc",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/godoc/analysis",
+        "//deps/golang.org/x/tools/godoc/golangorgenv",
+        "//deps/golang.org/x/tools/godoc/util",
+        "//deps/golang.org/x/tools/godoc/vfs",
+        "//deps/golang.org/x/tools/godoc/vfs/httpfs",
+    ],
+)
+
+go_test(
+    name = "godoc_test",
+    srcs = [
+        "dirtrees_test.go",
+        "godoc17_test.go",
+        "godoc_test.go",
+        "index_test.go",
+        "server_test.go",
+        "spec_test.go",
+        "versions_test.go",
+    ],
+    embed = [":godoc"],
+    deps = [
+        "//deps/golang.org/x/tools/godoc/vfs",
+        "//deps/golang.org/x/tools/godoc/vfs/gatefs",
+        "//deps/golang.org/x/tools/godoc/vfs/mapfs",
+    ],
+)

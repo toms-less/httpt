@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "ed25519",
+    srcs = [
+        "ed25519.go",
+        "ed25519_go113.go",
+    ],
+    importpath = "golang.org/x/crypto/ed25519",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/crypto/ed25519/internal/edwards25519"],
+)
+
+go_test(
+    name = "ed25519_test",
+    srcs = [
+        "ed25519_test.go",
+        "go113_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":ed25519"],
+    deps = ["//deps/golang.org/x/crypto/ed25519/internal/edwards25519"],
+)

@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "charset",
+    srcs = ["charset.go"],
+    importpath = "golang.org/x/net/html/charset",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/net/html",
+        "//deps/golang.org/x/text/encoding",
+        "//deps/golang.org/x/text/encoding/charmap",
+        "//deps/golang.org/x/text/encoding/htmlindex",
+        "//deps/golang.org/x/text/transform",
+    ],
+)
+
+go_test(
+    name = "charset_test",
+    srcs = ["charset_test.go"],
+    data = glob(["testdata/**"]),
+    embed = [":charset"],
+    deps = ["//deps/golang.org/x/text/transform"],
+)

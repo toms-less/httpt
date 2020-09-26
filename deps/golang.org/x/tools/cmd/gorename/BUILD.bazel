@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "gorename_lib",
+    srcs = ["main.go"],
+    importpath = "golang.org/x/tools/cmd/gorename",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//deps/golang.org/x/tools/go/buildutil",
+        "//deps/golang.org/x/tools/refactor/rename",
+    ],
+)
+
+go_binary(
+    name = "gorename",
+    embed = [":gorename_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "gorename_test",
+    srcs = [
+        "cgo_test.go",
+        "gorename_test.go",
+    ],
+    embed = [":gorename_lib"],
+)

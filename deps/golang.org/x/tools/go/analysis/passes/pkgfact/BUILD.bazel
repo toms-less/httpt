@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "pkgfact",
+    srcs = ["pkgfact.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/pkgfact",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/go/analysis"],
+)
+
+go_test(
+    name = "pkgfact_test",
+    srcs = ["pkgfact_test.go"],
+    embed = [":pkgfact"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

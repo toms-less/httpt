@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "analysis",
+    srcs = [
+        "analysis.go",
+        "callgraph.go",
+        "implements.go",
+        "json.go",
+        "peers.go",
+        "typeinfo.go",
+    ],
+    importpath = "golang.org/x/tools/godoc/analysis",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/callgraph",
+        "//deps/golang.org/x/tools/go/loader",
+        "//deps/golang.org/x/tools/go/pointer",
+        "//deps/golang.org/x/tools/go/ssa",
+        "//deps/golang.org/x/tools/go/ssa/ssautil",
+        "//deps/golang.org/x/tools/go/types/typeutil",
+    ],
+)

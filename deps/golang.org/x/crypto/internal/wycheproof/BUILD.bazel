@@ -1,0 +1,27 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_test")
+
+go_test(
+    name = "wycheproof_test",
+    srcs = [
+        "aes_cbc_test.go",
+        "chacha20_poly1305_test.go",
+        "dsa_test.go",
+        "ecdsa_compat_test.go",
+        "ecdsa_go115_test.go",
+        "ecdsa_test.go",
+        "eddsa_test.go",
+        "hkdf_test.go",
+        "hmac_test.go",
+        "rsa_pss_test.go",
+        "rsa_signature_test.go",
+        "wycheproof_test.go",
+    ],
+    deps = [
+        "//deps/golang.org/x/crypto/chacha20poly1305",
+        "//deps/golang.org/x/crypto/cryptobyte",
+        "//deps/golang.org/x/crypto/cryptobyte/asn1",
+        "//deps/golang.org/x/crypto/ed25519",
+        "//deps/golang.org/x/crypto/hkdf",
+        "//deps/golang.org/x/crypto/internal/wycheproof/internal/dsa",
+    ],
+)

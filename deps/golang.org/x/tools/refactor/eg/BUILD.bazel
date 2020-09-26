@@ -1,0 +1,65 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "eg",
+    srcs = [
+        "eg.go",
+        "match.go",
+        "rewrite.go",
+    ],
+    importpath = "golang.org/x/tools/refactor/eg",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/go/ast/astutil"],
+)
+
+go_test(
+    name = "eg_test",
+    srcs = ["eg_test.go"],
+    data = glob(["testdata/**"]),
+    embed = [":eg"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:nacl": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//deps/golang.org/x/tools/go/loader",
+        ],
+        "//conditions:default": [],
+    }),
+)

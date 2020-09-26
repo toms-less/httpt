@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "checker",
+    srcs = ["checker.go"],
+    importpath = "golang.org/x/tools/go/analysis/internal/checker",
+    visibility = ["//deps/golang.org/x/tools/go/analysis:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/internal/analysisflags",
+        "//deps/golang.org/x/tools/go/packages",
+    ],
+)

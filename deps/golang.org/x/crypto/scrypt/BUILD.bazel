@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "scrypt",
+    srcs = ["scrypt.go"],
+    importpath = "golang.org/x/crypto/scrypt",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/crypto/pbkdf2"],
+)
+
+go_test(
+    name = "scrypt_test",
+    srcs = [
+        "example_test.go",
+        "scrypt_test.go",
+    ],
+    embed = [":scrypt"],
+)

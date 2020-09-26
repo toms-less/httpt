@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "tests",
+    srcs = ["tests.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/tests",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/go/analysis"],
+)
+
+go_test(
+    name = "tests_test",
+    srcs = ["tests_test.go"],
+    embed = [":tests"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

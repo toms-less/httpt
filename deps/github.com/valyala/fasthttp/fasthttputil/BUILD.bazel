@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "fasthttputil",
+    srcs = [
+        "doc.go",
+        "inmemory_listener.go",
+        "pipeconns.go",
+    ],
+    importpath = "github.com/valyala/fasthttp/fasthttputil",
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "fasthttputil_test",
+    srcs = [
+        "inmemory_listener_test.go",
+        "inmemory_listener_timing_test.go",
+        "pipeconns_test.go",
+    ],
+    embed = [":fasthttputil"],
+    deps = ["//deps/github.com/valyala/fasthttp"],
+)

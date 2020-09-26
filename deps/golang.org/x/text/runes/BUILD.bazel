@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "runes",
+    srcs = [
+        "cond.go",
+        "runes.go",
+    ],
+    importpath = "golang.org/x/text/runes",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/text/transform"],
+)
+
+go_test(
+    name = "runes_test",
+    srcs = [
+        "cond_test.go",
+        "example_test.go",
+        "runes_test.go",
+    ],
+    embed = [":runes"],
+    deps = [
+        "//deps/golang.org/x/text/cases",
+        "//deps/golang.org/x/text/internal/testtext",
+        "//deps/golang.org/x/text/language",
+        "//deps/golang.org/x/text/transform",
+        "//deps/golang.org/x/text/unicode/norm",
+        "//deps/golang.org/x/text/width",
+    ],
+)

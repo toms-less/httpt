@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "ctrlflow",
+    srcs = ["ctrlflow.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/ctrlflow",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+        "//deps/golang.org/x/tools/go/cfg",
+        "//deps/golang.org/x/tools/go/types/typeutil",
+    ],
+)
+
+go_test(
+    name = "ctrlflow_test",
+    srcs = ["ctrlflow_test.go"],
+    embed = [":ctrlflow"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

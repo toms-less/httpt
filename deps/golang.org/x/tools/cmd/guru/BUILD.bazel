@@ -1,0 +1,55 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "guru_lib",
+    srcs = [
+        "callees.go",
+        "callers.go",
+        "callstack.go",
+        "definition.go",
+        "describe.go",
+        "freevars.go",
+        "guru.go",
+        "implements.go",
+        "isAlias18.go",
+        "isAlias19.go",
+        "main.go",
+        "peers.go",
+        "pointsto.go",
+        "pos.go",
+        "referrers.go",
+        "what.go",
+        "whicherrs.go",
+    ],
+    importpath = "golang.org/x/tools/cmd/guru",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//deps/golang.org/x/tools/cmd/guru/serial",
+        "//deps/golang.org/x/tools/go/ast/astutil",
+        "//deps/golang.org/x/tools/go/buildutil",
+        "//deps/golang.org/x/tools/go/callgraph",
+        "//deps/golang.org/x/tools/go/callgraph/static",
+        "//deps/golang.org/x/tools/go/loader",
+        "//deps/golang.org/x/tools/go/pointer",
+        "//deps/golang.org/x/tools/go/ssa",
+        "//deps/golang.org/x/tools/go/ssa/ssautil",
+        "//deps/golang.org/x/tools/go/types/typeutil",
+        "//deps/golang.org/x/tools/imports",
+        "//deps/golang.org/x/tools/refactor/importgraph",
+    ],
+)
+
+go_binary(
+    name = "guru",
+    embed = [":guru_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "guru_test",
+    srcs = [
+        "guru_test.go",
+        "unit_test.go",
+    ],
+    embed = [":guru_lib"],
+)

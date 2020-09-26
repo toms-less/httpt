@@ -7,8 +7,8 @@ load("//:build/workspace.bzl", "RELEASE_VERSION")
 #build package of dashboard.
 pkg_tar(
     name = "httpt-" + RELEASE_VERSION,
-    extension = "tar.gz",
     srcs = [":httpt"],
+    extension = "tar.gz",
     mode = "0755",
 )
 
@@ -19,10 +19,8 @@ go_binary(
 
 go_library(
     name = "main",
-    srcs = [
-        "app.go"
-    ],
-    importpath = "httpt",
+    srcs = ["app.go"],
+    importpath = "github.com/toms-less/httpt",
     deps = [
         ":pkg_config",
         ":pkg_logger",
@@ -39,7 +37,7 @@ go_library(
     ],
     importpath = "httpt/pkg/caller",
     deps = [
-        ":pkg_services"
+        ":pkg_services",
     ],
 )
 
@@ -55,41 +53,35 @@ go_library(
 
 go_library(
     name = "pkg_logger",
-    srcs = [
-        "pkg/logger/logger.go",
-    ],
+    srcs = ["pkg/logger/logger.go"],
     importpath = "httpt/pkg/logger",
     deps = [
-        ":vendor_log4go"
+        "//deps/github.com/jeanphorn/log4go",
     ],
 )
 
 go_library(
     name = "pkg_router",
-    srcs = [
-        "pkg/router/router.go",
-    ],
+    srcs = ["pkg/router/router.go"],
     importpath = "httpt/pkg/router",
     deps = [
         ":pkg_caller",
         ":pkg_config",
         ":pkg_logger",
         ":pkg_uri",
-        "@com_github_valyala_fasthttp//:go_default_library",
+        "//deps/github.com/valyala/fasthttp",
     ],
 )
 
 go_library(
     name = "pkg_server",
-    srcs = [
-        "pkg/server/server.go",
-    ],
+    srcs = ["pkg/server/server.go"],
     importpath = "httpt/pkg/server",
     deps = [
         ":pkg_config",
         ":pkg_logger",
         ":pkg_router",
-        "@com_github_valyala_fasthttp//:go_default_library",
+        "//deps/github.com/valyala/fasthttp",
     ],
 )
 
@@ -112,31 +104,31 @@ go_library(
     deps = [":pkg_services"],
 )
 
-go_library(
-    name = "vendor_log4go",
-    srcs = [
-        "vendor/github.com/jeanphorn/log4go/category.go",
-        "vendor/github.com/jeanphorn/log4go/filelog.go",
-        "vendor/github.com/jeanphorn/log4go/jsonconfig.go",
-        "vendor/github.com/jeanphorn/log4go/log4go.go",
-        "vendor/github.com/jeanphorn/log4go/pattlog.go",
-        "vendor/github.com/jeanphorn/log4go/socklog.go",
-        "vendor/github.com/jeanphorn/log4go/termlog.go",
-        "vendor/github.com/jeanphorn/log4go/util.go",
-        "vendor/github.com/jeanphorn/log4go/wrapper.go",
-        "vendor/github.com/jeanphorn/log4go/xmlconfig.go",
-    ],
-    importpath = "github.com/jeanphorn/log4go",
-    deps = [":vendor_tookits_file"],
-)
+# go_library(
+#     name = "deps_log4go",
+#     srcs = [
+#         "deps/github.com/jeanphorn/log4go/category.go",
+#         "deps/github.com/jeanphorn/log4go/filelog.go",
+#         "deps/github.com/jeanphorn/log4go/jsonconfig.go",
+#         "deps/github.com/jeanphorn/log4go/log4go.go",
+#         "deps/github.com/jeanphorn/log4go/pattlog.go",
+#         "deps/github.com/jeanphorn/log4go/socklog.go",
+#         "deps/github.com/jeanphorn/log4go/termlog.go",
+#         "deps/github.com/jeanphorn/log4go/util.go",
+#         "deps/github.com/jeanphorn/log4go/wrapper.go",
+#         "deps/github.com/jeanphorn/log4go/xmlconfig.go",
+#     ],
+#     importpath = "github.com/jeanphorn/log4go",
+#     deps = [":deps_tookits_file"],
+# )
 
-go_library(
-    name = "vendor_tookits_file",
-    srcs = [
-        "vendor/github.com/toolkits/file/downloader.go",
-        "vendor/github.com/toolkits/file/file.go",
-        "vendor/github.com/toolkits/file/reader.go",
-        "vendor/github.com/toolkits/file/writer.go",
-    ],
-    importpath = "github.com/toolkits/file",
-)
+# go_library(
+#     name = "deps_tookits_file",
+#     srcs = [
+#         "deps/github.com/toolkits/file/downloader.go",
+#         "deps/github.com/toolkits/file/file.go",
+#         "deps/github.com/toolkits/file/reader.go",
+#         "deps/github.com/toolkits/file/writer.go",
+#     ],
+#     importpath = "github.com/toolkits/file",
+# )

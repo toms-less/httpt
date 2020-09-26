@@ -1,0 +1,43 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "godoc_lib",
+    srcs = [
+        "blog.go",
+        "codewalk.go",
+        "dl.go",
+        "doc.go",
+        "goroot.go",
+        "handlers.go",
+        "index.go",
+        "main.go",
+        "play.go",
+    ],
+    importpath = "golang.org/x/tools/cmd/godoc",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//deps/golang.org/x/tools/blog",
+        "//deps/golang.org/x/tools/godoc",
+        "//deps/golang.org/x/tools/godoc/analysis",
+        "//deps/golang.org/x/tools/godoc/golangorgenv",
+        "//deps/golang.org/x/tools/godoc/redirect",
+        "//deps/golang.org/x/tools/godoc/static",
+        "//deps/golang.org/x/tools/godoc/vfs",
+        "//deps/golang.org/x/tools/godoc/vfs/gatefs",
+        "//deps/golang.org/x/tools/godoc/vfs/mapfs",
+        "//deps/golang.org/x/tools/godoc/vfs/zipfs",
+        "//deps/golang.org/x/tools/playground",
+    ],
+)
+
+go_binary(
+    name = "godoc",
+    embed = [":godoc_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "godoc_test",
+    srcs = ["godoc_test.go"],
+    embed = [":godoc_lib"],
+)

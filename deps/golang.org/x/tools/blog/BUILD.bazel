@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "blog",
+    srcs = ["blog.go"],
+    importpath = "golang.org/x/tools/blog",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/blog/atom",
+        "//deps/golang.org/x/tools/present",
+    ],
+)
+
+go_test(
+    name = "blog_test",
+    srcs = ["blog_test.go"],
+    embed = [":blog"],
+)

@@ -1,0 +1,33 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "agent",
+    srcs = [
+        "client.go",
+        "forward.go",
+        "keyring.go",
+        "server.go",
+    ],
+    importpath = "golang.org/x/crypto/ssh/agent",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/crypto/ed25519",
+        "//deps/golang.org/x/crypto/ssh",
+    ],
+)
+
+go_test(
+    name = "agent_test",
+    srcs = [
+        "client_test.go",
+        "example_test.go",
+        "keyring_test.go",
+        "server_test.go",
+        "testdata_test.go",
+    ],
+    embed = [":agent"],
+    deps = [
+        "//deps/golang.org/x/crypto/ssh",
+        "//deps/golang.org/x/crypto/ssh/testdata",
+    ],
+)

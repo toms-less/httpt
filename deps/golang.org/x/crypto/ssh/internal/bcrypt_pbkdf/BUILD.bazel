@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "bcrypt_pbkdf",
+    srcs = ["bcrypt_pbkdf.go"],
+    importpath = "golang.org/x/crypto/ssh/internal/bcrypt_pbkdf",
+    visibility = ["//deps/golang.org/x/crypto/ssh:__subpackages__"],
+    deps = ["//deps/golang.org/x/crypto/blowfish"],
+)
+
+go_test(
+    name = "bcrypt_pbkdf_test",
+    srcs = ["bcrypt_pbkdf_test.go"],
+    embed = [":bcrypt_pbkdf"],
+)

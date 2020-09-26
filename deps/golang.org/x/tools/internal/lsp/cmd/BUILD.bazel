@@ -1,0 +1,48 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "cmd",
+    srcs = [
+        "check.go",
+        "cmd.go",
+        "definition.go",
+        "format.go",
+        "info.go",
+        "query.go",
+        "serve.go",
+    ],
+    importpath = "golang.org/x/tools/internal/lsp/cmd",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/cmd/guru/serial",
+        "//deps/golang.org/x/tools/internal/jsonrpc2",
+        "//deps/golang.org/x/tools/internal/lsp",
+        "//deps/golang.org/x/tools/internal/lsp/browser",
+        "//deps/golang.org/x/tools/internal/lsp/cache",
+        "//deps/golang.org/x/tools/internal/lsp/debug",
+        "//deps/golang.org/x/tools/internal/lsp/diff",
+        "//deps/golang.org/x/tools/internal/lsp/protocol",
+        "//deps/golang.org/x/tools/internal/lsp/source",
+        "//deps/golang.org/x/tools/internal/span",
+        "//deps/golang.org/x/tools/internal/tool",
+    ],
+)
+
+go_test(
+    name = "cmd_test",
+    srcs = [
+        "check_test.go",
+        "cmd_race_test.go",
+        "cmd_test.go",
+        "definition_test.go",
+        "export_test.go",
+        "format_test.go",
+    ],
+    embed = [":cmd"],
+    deps = [
+        "//deps/golang.org/x/tools/go/packages/packagestest",
+        "//deps/golang.org/x/tools/internal/lsp/tests",
+        "//deps/golang.org/x/tools/internal/span",
+        "//deps/golang.org/x/tools/internal/tool",
+    ],
+)

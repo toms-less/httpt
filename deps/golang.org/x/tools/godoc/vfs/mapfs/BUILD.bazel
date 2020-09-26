@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "mapfs",
+    srcs = ["mapfs.go"],
+    importpath = "golang.org/x/tools/godoc/vfs/mapfs",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/godoc/vfs"],
+)
+
+go_test(
+    name = "mapfs_test",
+    srcs = ["mapfs_test.go"],
+    embed = [":mapfs"],
+)

@@ -1,0 +1,22 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "gcexportdata",
+    srcs = [
+        "gcexportdata.go",
+        "importer.go",
+    ],
+    importpath = "golang.org/x/tools/go/gcexportdata",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/go/internal/gcimporter"],
+)
+
+go_test(
+    name = "gcexportdata_test",
+    srcs = [
+        "example_test.go",
+        "gcexportdata_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":gcexportdata"],
+)

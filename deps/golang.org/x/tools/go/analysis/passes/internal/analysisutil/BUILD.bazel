@@ -1,0 +1,8 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "analysisutil",
+    srcs = ["util.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/internal/analysisutil",
+    visibility = ["//deps/golang.org/x/tools/go/analysis/passes:__subpackages__"],
+)

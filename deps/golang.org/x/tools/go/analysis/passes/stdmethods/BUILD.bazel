@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "stdmethods",
+    srcs = ["stdmethods.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/stdmethods",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+    ],
+)
+
+go_test(
+    name = "stdmethods_test",
+    srcs = ["stdmethods_test.go"],
+    embed = [":stdmethods"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

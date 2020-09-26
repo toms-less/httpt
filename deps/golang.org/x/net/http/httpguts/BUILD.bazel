@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "httpguts",
+    srcs = [
+        "guts.go",
+        "httplex.go",
+    ],
+    importpath = "golang.org/x/net/http/httpguts",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/net/idna"],
+)
+
+go_test(
+    name = "httpguts_test",
+    srcs = ["httplex_test.go"],
+    embed = [":httpguts"],
+)

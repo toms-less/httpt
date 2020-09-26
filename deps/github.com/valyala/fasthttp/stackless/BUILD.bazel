@@ -1,0 +1,23 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "stackless",
+    srcs = [
+        "doc.go",
+        "func.go",
+        "writer.go",
+    ],
+    importpath = "github.com/valyala/fasthttp/stackless",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/github.com/valyala/bytebufferpool"],
+)
+
+go_test(
+    name = "stackless_test",
+    srcs = [
+        "func_test.go",
+        "func_timing_test.go",
+        "writer_test.go",
+    ],
+    embed = [":stackless"],
+)

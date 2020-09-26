@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "compact",
+    srcs = [
+        "compact.go",
+        "language.go",
+        "parents.go",
+        "tables.go",
+        "tags.go",
+    ],
+    importpath = "golang.org/x/text/internal/language/compact",
+    visibility = ["//deps/golang.org/x/text:__subpackages__"],
+    deps = ["//deps/golang.org/x/text/internal/language"],
+)
+
+go_test(
+    name = "compact_test",
+    srcs = [
+        "gen_test.go",
+        "language_test.go",
+        "parse_test.go",
+    ],
+    embed = [":compact"],
+    deps = ["//deps/golang.org/x/text/internal/language"],
+)

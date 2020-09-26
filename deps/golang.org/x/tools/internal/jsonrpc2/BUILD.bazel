@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "jsonrpc2",
+    srcs = [
+        "jsonrpc2.go",
+        "log.go",
+        "stream.go",
+        "wire.go",
+    ],
+    importpath = "golang.org/x/tools/internal/jsonrpc2",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/internal/lsp/telemetry",
+        "//deps/golang.org/x/tools/internal/lsp/telemetry/stats",
+        "//deps/golang.org/x/tools/internal/lsp/telemetry/tag",
+        "//deps/golang.org/x/tools/internal/lsp/telemetry/trace",
+    ],
+)
+
+go_test(
+    name = "jsonrpc2_test",
+    srcs = ["jsonrpc2_test.go"],
+    embed = [":jsonrpc2"],
+)

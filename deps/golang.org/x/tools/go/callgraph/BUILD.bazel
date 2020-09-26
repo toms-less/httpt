@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "callgraph",
+    srcs = [
+        "callgraph.go",
+        "util.go",
+    ],
+    importpath = "golang.org/x/tools/go/callgraph",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/go/ssa"],
+)

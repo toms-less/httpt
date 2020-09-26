@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "gatefs",
+    srcs = ["gatefs.go"],
+    importpath = "golang.org/x/tools/godoc/vfs/gatefs",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/tools/godoc/vfs"],
+)
+
+go_test(
+    name = "gatefs_test",
+    srcs = ["gatefs_test.go"],
+    embed = [":gatefs"],
+    deps = ["//deps/golang.org/x/tools/godoc/vfs"],
+)

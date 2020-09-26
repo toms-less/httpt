@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "gopathwalk",
+    srcs = ["walk.go"],
+    importpath = "golang.org/x/tools/internal/gopathwalk",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = ["//deps/golang.org/x/tools/internal/fastwalk"],
+)
+
+go_test(
+    name = "gopathwalk_test",
+    srcs = ["walk_test.go"],
+    embed = [":gopathwalk"],
+)

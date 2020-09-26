@@ -1,0 +1,24 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "protocol",
+    srcs = [
+        "detatch.go",
+        "doc.go",
+        "enums.go",
+        "log.go",
+        "protocol.go",
+        "span.go",
+        "tsclient.go",
+        "tsprotocol.go",
+        "tsserver.go",
+    ],
+    importpath = "golang.org/x/tools/internal/lsp/protocol",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/internal/jsonrpc2",
+        "//deps/golang.org/x/tools/internal/lsp/telemetry/trace",
+        "//deps/golang.org/x/tools/internal/lsp/xlog",
+        "//deps/golang.org/x/tools/internal/span",
+    ],
+)

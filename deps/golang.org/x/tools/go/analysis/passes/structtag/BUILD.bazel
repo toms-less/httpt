@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "structtag",
+    srcs = ["structtag.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/structtag",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+    ],
+)
+
+go_test(
+    name = "structtag_test",
+    srcs = ["structtag_test.go"],
+    embed = [":structtag"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

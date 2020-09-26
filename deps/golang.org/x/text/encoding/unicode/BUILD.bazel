@@ -1,0 +1,31 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "unicode",
+    srcs = [
+        "override.go",
+        "unicode.go",
+    ],
+    importpath = "golang.org/x/text/encoding/unicode",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/text/encoding",
+        "//deps/golang.org/x/text/encoding/internal",
+        "//deps/golang.org/x/text/encoding/internal/identifier",
+        "//deps/golang.org/x/text/internal/utf8internal",
+        "//deps/golang.org/x/text/runes",
+        "//deps/golang.org/x/text/transform",
+    ],
+)
+
+go_test(
+    name = "unicode_test",
+    srcs = ["unicode_test.go"],
+    embed = [":unicode"],
+    deps = [
+        "//deps/golang.org/x/text/encoding",
+        "//deps/golang.org/x/text/encoding/charmap",
+        "//deps/golang.org/x/text/encoding/internal/enctest",
+        "//deps/golang.org/x/text/transform",
+    ],
+)

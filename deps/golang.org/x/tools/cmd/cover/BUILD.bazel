@@ -1,0 +1,26 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "cover_lib",
+    srcs = [
+        "cover.go",
+        "doc.go",
+        "func.go",
+        "html.go",
+    ],
+    importpath = "golang.org/x/tools/cmd/cover",
+    visibility = ["//visibility:private"],
+    deps = ["//deps/golang.org/x/tools/cover"],
+)
+
+go_binary(
+    name = "cover",
+    embed = [":cover_lib"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "cover_test",
+    srcs = ["cover_test.go"],
+    embed = [":cover_lib"],
+)

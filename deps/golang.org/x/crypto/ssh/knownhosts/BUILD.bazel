@@ -1,0 +1,16 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "knownhosts",
+    srcs = ["knownhosts.go"],
+    importpath = "golang.org/x/crypto/ssh/knownhosts",
+    visibility = ["//visibility:public"],
+    deps = ["//deps/golang.org/x/crypto/ssh"],
+)
+
+go_test(
+    name = "knownhosts_test",
+    srcs = ["knownhosts_test.go"],
+    embed = [":knownhosts"],
+    deps = ["//deps/golang.org/x/crypto/ssh"],
+)

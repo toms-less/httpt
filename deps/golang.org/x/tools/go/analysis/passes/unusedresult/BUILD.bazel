@@ -1,0 +1,21 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "unusedresult",
+    srcs = ["unusedresult.go"],
+    importpath = "golang.org/x/tools/go/analysis/passes/unusedresult",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/analysis/passes/internal/analysisutil",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+    ],
+)
+
+go_test(
+    name = "unusedresult_test",
+    srcs = ["unusedresult_test.go"],
+    embed = [":unusedresult"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

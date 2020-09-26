@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "singlechecker",
+    srcs = ["singlechecker.go"],
+    importpath = "golang.org/x/tools/go/analysis/singlechecker",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/internal/analysisflags",
+        "//deps/golang.org/x/tools/go/analysis/internal/checker",
+        "//deps/golang.org/x/tools/go/analysis/unitchecker",
+    ],
+)

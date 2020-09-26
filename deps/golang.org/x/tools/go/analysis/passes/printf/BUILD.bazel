@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "printf",
+    srcs = [
+        "printf.go",
+        "types.go",
+    ],
+    importpath = "golang.org/x/tools/go/analysis/passes/printf",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/analysis",
+        "//deps/golang.org/x/tools/go/analysis/passes/inspect",
+        "//deps/golang.org/x/tools/go/analysis/passes/internal/analysisutil",
+        "//deps/golang.org/x/tools/go/ast/inspector",
+        "//deps/golang.org/x/tools/go/types/typeutil",
+    ],
+)
+
+go_test(
+    name = "printf_test",
+    srcs = ["printf_test.go"],
+    embed = [":printf"],
+    deps = ["//deps/golang.org/x/tools/go/analysis/analysistest"],
+)

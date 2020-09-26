@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "snippet",
+    srcs = ["snippet_builder.go"],
+    importpath = "golang.org/x/tools/internal/lsp/snippet",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+)
+
+go_test(
+    name = "snippet_test",
+    srcs = ["snippet_builder_test.go"],
+    embed = [":snippet"],
+)

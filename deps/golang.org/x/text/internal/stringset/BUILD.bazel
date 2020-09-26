@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "stringset",
+    srcs = ["set.go"],
+    importpath = "golang.org/x/text/internal/stringset",
+    visibility = ["//deps/golang.org/x/text:__subpackages__"],
+)
+
+go_test(
+    name = "stringset_test",
+    srcs = ["set_test.go"],
+    embed = [":stringset"],
+)

@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "sockstest",
+    srcs = ["server.go"],
+    importpath = "golang.org/x/net/internal/sockstest",
+    visibility = ["//deps/golang.org/x/net:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/net/internal/socks",
+        "//deps/golang.org/x/net/nettest",
+    ],
+)
+
+go_test(
+    name = "sockstest_test",
+    srcs = ["server_test.go"],
+    embed = [":sockstest"],
+    deps = ["//deps/golang.org/x/net/internal/socks"],
+)

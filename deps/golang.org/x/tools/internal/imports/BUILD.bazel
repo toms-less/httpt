@@ -1,0 +1,38 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "imports",
+    srcs = [
+        "fix.go",
+        "imports.go",
+        "mod.go",
+        "sortimports.go",
+        "zstdlib.go",
+    ],
+    importpath = "golang.org/x/tools/internal/imports",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/tools/go/ast/astutil",
+        "//deps/golang.org/x/tools/go/packages",
+        "//deps/golang.org/x/tools/internal/gopathwalk",
+        "//deps/golang.org/x/tools/internal/module",
+    ],
+)
+
+go_test(
+    name = "imports_test",
+    srcs = [
+        "fix_test.go",
+        "mod_112_test.go",
+        "mod_test.go",
+        "proxy_112_test.go",
+        "proxy_113_test.go",
+    ],
+    data = glob(["testdata/**"]),
+    embed = [":imports"],
+    deps = [
+        "//deps/golang.org/x/tools/go/packages/packagestest",
+        "//deps/golang.org/x/tools/internal/module",
+        "//deps/golang.org/x/tools/internal/txtar",
+    ],
+)

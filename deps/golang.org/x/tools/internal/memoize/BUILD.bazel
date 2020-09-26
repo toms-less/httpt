@@ -1,0 +1,18 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "memoize",
+    srcs = [
+        "detatch.go",
+        "memoize.go",
+        "nocopy.go",
+    ],
+    importpath = "golang.org/x/tools/internal/memoize",
+    visibility = ["//deps/golang.org/x/tools:__subpackages__"],
+)
+
+go_test(
+    name = "memoize_test",
+    srcs = ["memoize_test.go"],
+    embed = [":memoize"],
+)

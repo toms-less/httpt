@@ -1,0 +1,12 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "dsa",
+    srcs = ["dsa.go"],
+    importpath = "golang.org/x/crypto/internal/wycheproof/internal/dsa",
+    visibility = ["//deps/golang.org/x/crypto:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/crypto/cryptobyte",
+        "//deps/golang.org/x/crypto/cryptobyte/asn1",
+    ],
+)

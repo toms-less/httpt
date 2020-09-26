@@ -1,0 +1,93 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "cha",
+    srcs = ["cha.go"],
+    importpath = "golang.org/x/tools/go/callgraph/cha",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/tools/go/callgraph",
+        "//deps/golang.org/x/tools/go/ssa",
+        "//deps/golang.org/x/tools/go/ssa/ssautil",
+        "//deps/golang.org/x/tools/go/types/typeutil",
+    ],
+)
+
+go_test(
+    name = "cha_test",
+    srcs = ["cha_test.go"],
+    embed = [":cha"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:nacl": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//deps/golang.org/x/tools/go/callgraph",
+            "//deps/golang.org/x/tools/go/loader",
+            "//deps/golang.org/x/tools/go/ssa/ssautil",
+        ],
+        "//conditions:default": [],
+    }),
+)

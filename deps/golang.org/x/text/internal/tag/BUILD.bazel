@@ -1,0 +1,14 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "tag",
+    srcs = ["tag.go"],
+    importpath = "golang.org/x/text/internal/tag",
+    visibility = ["//deps/golang.org/x/text:__subpackages__"],
+)
+
+go_test(
+    name = "tag_test",
+    srcs = ["tag_test.go"],
+    embed = [":tag"],
+)

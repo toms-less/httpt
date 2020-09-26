@@ -1,0 +1,70 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "reuseport",
+    srcs = [
+        "reuseport.go",
+        "reuseport_error.go",
+        "reuseport_windows.go",
+    ],
+    importpath = "github.com/valyala/fasthttp/reuseport",
+    visibility = ["//visibility:public"],
+    deps = select({
+        "@io_bazel_rules_go//go/platform:aix": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:android": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:darwin": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:dragonfly": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:freebsd": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:illumos": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:ios": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:js": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:linux": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:nacl": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:netbsd": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:openbsd": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:plan9": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:solaris": [
+            "//deps/github.com/valyala/tcplisten",
+        ],
+        "@io_bazel_rules_go//go/platform:windows": [
+            "//deps/golang.org/x/sys/windows",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_test(
+    name = "reuseport_test",
+    srcs = [
+        "reuseport_example_test.go",
+        "reuseport_test.go",
+    ],
+    embed = [":reuseport"],
+    deps = ["//deps/github.com/valyala/fasthttp"],
+)

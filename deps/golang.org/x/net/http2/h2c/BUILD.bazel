@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "h2c",
+    srcs = ["h2c.go"],
+    importpath = "golang.org/x/net/http2/h2c",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/net/http/httpguts",
+        "//deps/golang.org/x/net/http2",
+        "//deps/golang.org/x/net/http2/hpack",
+    ],
+)
+
+go_test(
+    name = "h2c_test",
+    srcs = ["h2c_test.go"],
+    embed = [":h2c"],
+    deps = ["//deps/golang.org/x/net/http2"],
+)

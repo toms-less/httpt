@@ -1,0 +1,13 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "enctest",
+    srcs = ["enctest.go"],
+    importpath = "golang.org/x/text/encoding/internal/enctest",
+    visibility = ["//deps/golang.org/x/text/encoding:__subpackages__"],
+    deps = [
+        "//deps/golang.org/x/text/encoding",
+        "//deps/golang.org/x/text/encoding/internal/identifier",
+        "//deps/golang.org/x/text/transform",
+    ],
+)

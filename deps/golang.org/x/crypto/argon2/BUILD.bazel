@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "argon2",
+    srcs = [
+        "argon2.go",
+        "blake2b.go",
+        "blamka_amd64.go",
+        "blamka_amd64.s",
+        "blamka_generic.go",
+        "blamka_ref.go",
+    ],
+    importpath = "golang.org/x/crypto/argon2",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//deps/golang.org/x/crypto/blake2b",
+    ] + select({
+        "@io_bazel_rules_go//go/platform:amd64": [
+            "//deps/golang.org/x/sys/cpu",
+        ],
+        "//conditions:default": [],
+    }),
+)
+
+go_test(
+    name = "argon2_test",
+    srcs = ["argon2_test.go"],
+    embed = [":argon2"],
+)

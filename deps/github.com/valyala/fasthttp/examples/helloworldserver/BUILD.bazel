@@ -1,0 +1,15 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library")
+
+go_library(
+    name = "helloworldserver_lib",
+    srcs = ["helloworldserver.go"],
+    importpath = "github.com/valyala/fasthttp/examples/helloworldserver",
+    visibility = ["//visibility:private"],
+    deps = ["//deps/github.com/valyala/fasthttp"],
+)
+
+go_binary(
+    name = "helloworldserver",
+    embed = [":helloworldserver_lib"],
+    visibility = ["//visibility:public"],
+)
