@@ -103,32 +103,3 @@ go_library(
     importpath = "httpt/pkg/uri",
     deps = [":pkg_services"],
 )
-
-# go_library(
-#     name = "deps_log4go",
-#     srcs = [
-#         "deps/github.com/jeanphorn/log4go/category.go",
-#         "deps/github.com/jeanphorn/log4go/filelog.go",
-#         "deps/github.com/jeanphorn/log4go/jsonconfig.go",
-#         "deps/github.com/jeanphorn/log4go/log4go.go",
-#         "deps/github.com/jeanphorn/log4go/pattlog.go",
-#         "deps/github.com/jeanphorn/log4go/socklog.go",
-#         "deps/github.com/jeanphorn/log4go/termlog.go",
-#         "deps/github.com/jeanphorn/log4go/util.go",
-#         "deps/github.com/jeanphorn/log4go/wrapper.go",
-#         "deps/github.com/jeanphorn/log4go/xmlconfig.go",
-#     ],
-#     importpath = "github.com/jeanphorn/log4go",
-#     deps = [":deps_tookits_file"],
-# )
-
-# go_library(
-#     name = "deps_tookits_file",
-#     srcs = [
-#         "deps/github.com/toolkits/file/downloader.go",
-#         "deps/github.com/toolkits/file/file.go",
-#         "deps/github.com/toolkits/file/reader.go",
-#         "deps/github.com/toolkits/file/writer.go",
-#     ],
-#     importpath = "github.com/toolkits/file",
-# )
