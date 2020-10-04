@@ -94,7 +94,7 @@ type ResponseData struct {
 	Data string `json:"data"`
 
 	// Stack field.
-	Stack ResponseStack `json:"stack"`
+	Stack *ResponseStack `json:"stack,omitempty"`
 }
 
 // ResponseStack structure.

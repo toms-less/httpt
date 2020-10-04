@@ -88,7 +88,7 @@ func Call(uriInfo *uri.UriInfo, request *fasthttp.RequestCtx) *RuntimeResponse {
 func ok(r *pb.RuntimeResponse, uri *string) *RuntimeResponse {
 	stack := ResponseStack{Status: status.OK.Code(), Message: status.OK.Message(), Group: r.Call.Group, Unit: r.Call.Unit, URI: *uri, Function: r.Call.Function, FunctionVersion: r.Call.Version, Runtime: r.Call.Runtime}
 	if config.Config.Stack {
-		data := ResponseData{ID: r.Id, Status: status.OK.Code(), Data: r.Call.Data, Stack: stack}
+		data := ResponseData{ID: r.Id, Status: status.OK.Code(), Data: r.Call.Data, Stack: &stack}
 		return &RuntimeResponse{Body: data, ContentType: TypeOf(&r.Call.ContentType), Code: r.Call.Status, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
 	}
 	data := ResponseData{ID: r.Id, Status: status.OK.Code(), Data: r.Call.Data}
@@ -98,7 +98,7 @@ func ok(r *pb.RuntimeResponse, uri *string) *RuntimeResponse {
 func callError(s *status.Status, r *pb.RuntimeResponse, uri *string) *RuntimeResponse {
 	stack := ResponseStack{Status: s.Code(), Message: s.Message(), Detail: r.Message, Group: r.Call.Group, Unit: r.Call.Unit, URI: *uri, Function: r.Call.Function, FunctionVersion: r.Call.Version, Runtime: r.Call.Runtime}
 	if config.Config.Stack {
-		data := ResponseData{ID: r.Id, Status: s.Code(), Data: r.Call.Data, Stack: stack}
+		data := ResponseData{ID: r.Id, Status: s.Code(), Data: r.Call.Data, Stack: &stack}
 		return &RuntimeResponse{Body: data, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
 	}
 	data := ResponseData{ID: r.Id, Status: s.Code(), Data: r.Call.Data}
@@ -113,7 +113,7 @@ func innerError(s *status.Status, uriInfo *uri.UriInfo, id uint64, err ...error)
 		} else {
 			stack = ResponseStack{Status: s.Code(), Message: s.Message(), Detail: s.Message(), Group: uriInfo.Group, Unit: uriInfo.Function.Unit, URI: uriInfo.URI, Function: uriInfo.Function.Name, FunctionVersion: uriInfo.Function.Version}
 		}
-		data := ResponseData{ID: strconv.FormatUint(id, 10), Status: s.Code(), Stack: stack}
+		data := ResponseData{ID: strconv.FormatUint(id, 10), Status: s.Code(), Stack: &stack}
 		return &RuntimeResponse{Body: data}
 	}
 	data := ResponseData{ID: strconv.FormatUint(id, 10), Status: s.Code()}

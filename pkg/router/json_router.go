@@ -7,6 +7,7 @@ import (
 	"httpt/pkg/logger"
 	"httpt/pkg/status"
 	"httpt/pkg/uri"
+	"strings"
 	"time"
 
 	"github.com/valyala/fasthttp"
@@ -52,6 +53,16 @@ import (
 
 func jsonRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	r := caller.Call(uriInfo, ctx)
+	if r.Body.Status != status.OK.Code() {
+		var err string
+		if r.Body.Stack == nil {
+			err = status.String(r.Body.Status)
+		} else {
+			err = r.Body.Stack.Detail
+		}
+		logger.GetRouteLogger().Error("Route error [%s], API [%s], request headers [%v], request data [%s].", err, string(ctx.URI().RequestURI()), strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
+	}
+
 	if r.Body.Status == status.OK.Code() && r.Code != 200 {
 		onInformal(ctx, r)
 		return
@@ -60,7 +71,6 @@ func jsonRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	// Serialize data.
 	data, err := json.Marshal(&r.Body)
 	if err != nil {
-		logger.GetRouteLogger().Error("Data serialize error '%v'.", err)
 		onError(ctx, r, err)
 		return
 	}

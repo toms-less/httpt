@@ -8,6 +8,7 @@ import (
 	"httpt/pkg/status"
 	"httpt/pkg/uri"
 	"strconv"
+	"strings"
 
 	"httpt/pkg/caller"
 
@@ -103,6 +104,7 @@ func Route(ctx *fasthttp.RequestCtx) {
 	path := string(ctx.URI().RequestURI())
 	uriInfo := uri.GetURIInfo(&path)
 
+	routeLog := logger.GetRouteLogger()
 	t := string(ctx.Request.Header.Peek(contentType))
 	if uriInfo == nil {
 		switch caller.TypeOf(&t) {
@@ -116,6 +118,7 @@ func Route(ctx *fasthttp.RequestCtx) {
 			errorRoute(ctx, status.UnsupportedContentType)
 			break
 		}
+		routeLog.Error("API [%s] is not found, request headers [%v], request data [%s].", path, strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
 		return
 	}
 
@@ -128,6 +131,7 @@ func Route(ctx *fasthttp.RequestCtx) {
 		break
 	case caller.UNKNOWN:
 		errorRoute(ctx, status.UnsupportedContentType)
+		routeLog.Error("Unsupported content-type [%s], API [%s], request headers [%v], request data [%s].", t, path, strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
 		break
 	}
 }
@@ -135,7 +139,7 @@ func Route(ctx *fasthttp.RequestCtx) {
 func jsonErrorRoute(ctx *fasthttp.RequestCtx) {
 	if config.Config.Stack {
 		stack := caller.ResponseStack{Status: status.APINotFound.Code(), Message: status.APINotFound.Message(), URI: string(ctx.URI().RequestURI())}
-		data := caller.ResponseData{ID: strconv.FormatUint(ctx.ID(), 10), Status: status.APINotFound.Code(), Stack: stack}
+		data := caller.ResponseData{ID: strconv.FormatUint(ctx.ID(), 10), Status: status.APINotFound.Code(), Stack: &stack}
 		body, err := json.Marshal(&data)
 		if err != nil {
 			logger.GetRouteLogger().Error("Data serialize error '%v'.", err)
@@ -236,6 +240,20 @@ func onInformal(ctx *fasthttp.RequestCtx, r *caller.RuntimeResponse) {
 //       </body>
 //     </html>
 func onError(ctx *fasthttp.RequestCtx, r *caller.RuntimeResponse, err ...error) {
+	// Log for this request.
+	var errStr string
+	if len(err) == 1 {
+		errStr = err[0].Error()
+	} else {
+		if r.Body.Stack == nil {
+			errStr = status.String(r.Body.Status)
+		} else {
+			errStr = r.Body.Stack.Detail
+		}
+	}
+	logger.GetRouteLogger().Error("Route error [%s], API [%s], request headers [%v], request data [%s].", errStr, string(ctx.URI().RequestURI()), strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
+
+	// Response to client.
 	ctx.Response.Header.Add(idHeader, strconv.FormatUint(ctx.ID(), 10))
 	ctx.Response.Header.Add(statusHeader, strconv.Itoa(status.InvalidJSON.Code()))
 	ctx.Response.Header.Set(contentType, "text/html; charset=utf-8")
