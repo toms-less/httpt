@@ -7,11 +7,12 @@ import (
 )
 
 // key: "Cell:Unit:FunctionName:Version" value: RuntimeService
-var cache common.ConcurrentMap
+var cache *common.ConcurrentMap
 
 // Init function.
 // Initialize runtime services cache.
 func Init() error {
+	cache = common.NewConcurrentMap()
 	return nil
 }
 

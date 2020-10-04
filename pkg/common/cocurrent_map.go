@@ -22,7 +22,7 @@ type ConcurrentMapShared struct {
 // NewConcurrentMap function.
 // Make a new cocurrent map with default share count.
 func NewConcurrentMap() *ConcurrentMap {
-	return NewConcurrentMapSpecific(share)
+	return NewConcurrentMapSpecific(64)
 }
 
 // NewConcurrentMapSpecific function.

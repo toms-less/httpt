@@ -101,7 +101,7 @@ const (
 // Route to function.
 func Route(ctx *fasthttp.RequestCtx) {
 	path := string(ctx.URI().RequestURI())
-	uriInfo := uri.GetUriInfo(&path)
+	uriInfo := uri.GetURIInfo(&path)
 
 	t := string(ctx.Request.Header.Peek(contentType))
 	if uriInfo == nil {
