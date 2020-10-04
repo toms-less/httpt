@@ -320,12 +320,12 @@ message Cookie {
     /**
      * cookie expires.
      */
-    int64 expires = 5;
+    int32 expires = 5;
 
     /**
      * cookie max age.
      */
-    int64 maxAge = 6;
+    int32 maxAge = 6;
 
     /**
      * cookie secure.

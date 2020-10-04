@@ -70,7 +70,7 @@ func htmlRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 		c.SetValue(current.Value)
 		c.SetDomain(current.Domain)
 		c.SetPath(current.Path)
-		c.SetExpire(time.Unix(current.Expires, 10))
+		c.SetExpire(time.Unix(int64(current.Expires), 10))
 		c.SetMaxAge(int(current.MaxAge))
 		c.SetSecure(current.Secure)
 		c.SetHTTPOnly(current.HttpOnly)

@@ -48,7 +48,7 @@ func Call(uriInfo *uri.UriInfo, request *fasthttp.RequestCtx) *RuntimeResponse {
 		cookie := fasthttp.AcquireCookie()
 		defer fasthttp.ReleaseCookie(cookie)
 		cookie.ParseBytes(value)
-		cookies = append(cookies, &pb.Cookie{Name: string(cookie.Key()), Value: string(cookie.Value()), Domain: string(cookie.Domain()), Path: string(cookie.Path()), Expires: cookie.Expire().Unix(), MaxAge: int64(cookie.MaxAge()), Secure: cookie.Secure(), HttpOnly: cookie.HTTPOnly()})
+		cookies = append(cookies, &pb.Cookie{Name: string(cookie.Key()), Value: string(cookie.Value()), Domain: string(cookie.Domain()), Path: string(cookie.Path()), Expires: int32(cookie.Expire().Unix()), MaxAge: int32(cookie.MaxAge()), Secure: cookie.Secure(), HttpOnly: cookie.HTTPOnly()})
 	})
 
 	// Build request.
