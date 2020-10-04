@@ -134,7 +134,7 @@ func Route(ctx *fasthttp.RequestCtx) {
 
 func jsonErrorRoute(ctx *fasthttp.RequestCtx) {
 	if config.Config.Stack {
-		stack := caller.ResponseStack{Status: status.APINotFound.Code(), Message: status.APINotFound.Message()}
+		stack := caller.ResponseStack{Status: status.APINotFound.Code(), Message: status.APINotFound.Message(), URI: string(ctx.URI().RequestURI())}
 		data := caller.ResponseData{ID: strconv.FormatUint(ctx.ID(), 10), Status: status.APINotFound.Code(), Stack: stack}
 		body, err := json.Marshal(&data)
 		if err != nil {
@@ -161,11 +161,11 @@ func errorRoute(ctx *fasthttp.RequestCtx, s *status.Status) {
 	uriLine := "<div>uri: " + string(ctx.URI().RequestURI()) + "</div>"
 
 	if config.Config.Stack {
-		data := "<html><head><titile>Error_200</titile></head><body>" + idLine + statusLine + messageLine + uriLine + "</body></html>"
+		data := "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Error_200</title></head><body>" + idLine + statusLine + messageLine + uriLine + "</body></html>"
 		fmt.Fprintf(ctx, data)
 		return
 	}
-	data := "<html><head><titile>Error_200</titile></head><body>" + idLine + statusLine + "</body></html>"
+	data := "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Error_200</title></head><body>" + idLine + statusLine + "</body></html>"
 	fmt.Fprintf(ctx, data)
 }
 
@@ -209,11 +209,11 @@ func onInformal(ctx *fasthttp.RequestCtx, r *caller.RuntimeResponse) {
 		functionVersionLine := "<div>functionVersion: " + r.Body.Stack.FunctionVersion + "</div>"
 		runtimeLine := "<div>runtime: " + r.Body.Stack.Runtime + "</div>"
 
-		data := "<html><head><titile>Error_" + strconv.Itoa(int(r.Code)) + "</titile></head><body>" + idLine + statusLine + messageLine + detailLine + groupLine + unitLine + uriLine + functionLine + functionVersionLine + runtimeLine + "</body></html>"
+		data := "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Error_" + strconv.Itoa(int(r.Code)) + "</title></head><body>" + idLine + statusLine + messageLine + detailLine + groupLine + unitLine + uriLine + functionLine + functionVersionLine + runtimeLine + "</body></html>"
 		fmt.Fprintf(ctx, data)
 		return
 	}
-	data := "<html><head><titile>Error_" + strconv.Itoa(int(r.Code)) + "</titile></head><body>" + idLine + statusLine + "</body></html>"
+	data := "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Error_" + strconv.Itoa(int(r.Code)) + "</title></head><body>" + idLine + statusLine + "</body></html>"
 	fmt.Fprintf(ctx, data)
 }
 
@@ -258,10 +258,10 @@ func onError(ctx *fasthttp.RequestCtx, r *caller.RuntimeResponse, err ...error) 
 		functionVersionLine := "<div>functionVersion: " + r.Body.Stack.FunctionVersion + "</div>"
 		runtimeLine := "<div>runtime: " + r.Body.Stack.Runtime + "</div>"
 
-		data := "<html><head><titile>Error_200</titile></head><body>" + idLine + statusLine + messageLine + detailLine + groupLine + unitLine + uriLine + functionLine + functionVersionLine + runtimeLine + "</body></html>"
+		data := "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Error_200</title></head><body>" + idLine + statusLine + messageLine + detailLine + groupLine + unitLine + uriLine + functionLine + functionVersionLine + runtimeLine + "</body></html>"
 		fmt.Fprintf(ctx, data)
 		return
 	}
-	data := "<html><head><titile>Error_200</titile></head><body>" + idLine + statusLine + "</body></html>"
+	data := "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\"><html><head><title>Error_200</title></head><body>" + idLine + statusLine + "</body></html>"
 	fmt.Fprintf(ctx, data)
 }

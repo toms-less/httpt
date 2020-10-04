@@ -83,57 +83,57 @@ import (
 type ResponseData struct {
 	// ID field.
 	// Request id.
-	ID string
+	ID string `json:"id"`
 
 	// Status field.
 	// Status code of this request.
-	Status int
+	Status int `json:"status"`
 
 	// Data field.
 	// user data of function returned.
-	Data string
+	Data string `json:"data"`
 
 	// Stack field.
-	Stack ResponseStack
+	Stack ResponseStack `json:"stack"`
 }
 
 // ResponseStack structure.
 type ResponseStack struct {
 	// Status field.
 	// System status code of this request.
-	Status int
+	Status int `json:"status"`
 
 	// Message field.
 	// Message of this status code.
-	Message string
+	Message string `json:"message"`
 
 	// Detail field.
 	// Detail info of this request when some errors are happened.
-	Detail string
+	Detail string `json:"detail"`
 
 	// Group field.
 	// Group of this request.
-	Group string
+	Group string `json:"group"`
 
 	// Unit field.
 	// Unit of this request.
-	Unit string
+	Unit string `json:"unit"`
 
 	// Uri field.
 	// URI of this request.
-	URI string
+	URI string `json:"uri"`
 
 	// Function field.
 	// Function name of this URI.
-	Function string
+	Function string `json:"function"`
 
 	// FunctionVersion field.
 	// Function version of this function.
-	FunctionVersion string
+	FunctionVersion string `json:"functionVersion"`
 
 	// Runtime field.
 	// Runtime of this function.
-	Runtime string
+	Runtime string `json:"runtime"`
 }
 
 // RuntimeResponse structure.

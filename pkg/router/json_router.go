@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"httpt/pkg/caller"
 	"httpt/pkg/logger"
+	"httpt/pkg/status"
 	"httpt/pkg/uri"
 	"time"
 
@@ -51,7 +52,7 @@ import (
 
 func jsonRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	r := caller.Call(uriInfo, ctx)
-	if r.Code != 200 {
+	if r.Body.Status == status.OK.Code() && r.Code != 200 {
 		onInformal(ctx, r)
 		return
 	}
@@ -65,22 +66,26 @@ func jsonRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	}
 
 	// Set response headers.
-	for name, value := range *r.Headers {
-		ctx.Response.Header.Add(name, value)
+	if r.Headers != nil {
+		for name, value := range *r.Headers {
+			ctx.Response.Header.Add(name, value)
+		}
 	}
 
 	// Set response cookies.
-	for _, current := range r.Cookies {
-		c := fasthttp.Cookie{}
-		c.SetKey(current.Name)
-		c.SetValue(current.Value)
-		c.SetDomain(current.Domain)
-		c.SetPath(current.Path)
-		c.SetExpire(time.Unix(int64(current.Expires), 10))
-		c.SetMaxAge(int(current.MaxAge))
-		c.SetSecure(current.Secure)
-		c.SetHTTPOnly(current.HttpOnly)
-		ctx.Response.Header.SetCookie(&c)
+	if r.Cookies != nil {
+		for _, current := range r.Cookies {
+			c := fasthttp.Cookie{}
+			c.SetKey(current.Name)
+			c.SetValue(current.Value)
+			c.SetDomain(current.Domain)
+			c.SetPath(current.Path)
+			c.SetExpire(time.Unix(int64(current.Expires), 10))
+			c.SetMaxAge(int(current.MaxAge))
+			c.SetSecure(current.Secure)
+			c.SetHTTPOnly(current.HttpOnly)
+			ctx.Response.Header.SetCookie(&c)
+		}
 	}
 	fmt.Fprintf(ctx, string(data))
 }

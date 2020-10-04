@@ -19,6 +19,9 @@ import (
 func Call(uriInfo *uri.UriInfo, request *fasthttp.RequestCtx) *RuntimeResponse {
 	key := uriInfo.Group + uriInfo.Function.Unit + uriInfo.Function.Name + uriInfo.Function.Version
 	host := runtime.GetRuntime(&key)
+	if host == nil {
+		return innerError(status.RuntimeNotFound, uriInfo, request.ID())
+	}
 
 	// Set up a connection to the server.
 	conn, err := grpc.Dial(host.Address(), grpc.WithInsecure(), grpc.WithBlock())
@@ -102,9 +105,14 @@ func callError(s *status.Status, r *pb.RuntimeResponse, uri *string) *RuntimeRes
 	return &RuntimeResponse{Body: data, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
 }
 
-func innerError(s *status.Status, uriInfo *uri.UriInfo, id uint64, err error) *RuntimeResponse {
-	stack := ResponseStack{Status: s.Code(), Message: s.Message(), Detail: err.Error(), Group: uriInfo.Group, Unit: uriInfo.Function.Unit, URI: uriInfo.URI, Function: uriInfo.Function.Name, FunctionVersion: uriInfo.Function.Version}
+func innerError(s *status.Status, uriInfo *uri.UriInfo, id uint64, err ...error) *RuntimeResponse {
 	if config.Config.Stack {
+		var stack ResponseStack
+		if len(err) == 1 {
+			stack = ResponseStack{Status: s.Code(), Message: s.Message(), Detail: err[0].Error(), Group: uriInfo.Group, Unit: uriInfo.Function.Unit, URI: uriInfo.URI, Function: uriInfo.Function.Name, FunctionVersion: uriInfo.Function.Version}
+		} else {
+			stack = ResponseStack{Status: s.Code(), Message: s.Message(), Detail: s.Message(), Group: uriInfo.Group, Unit: uriInfo.Function.Unit, URI: uriInfo.URI, Function: uriInfo.Function.Name, FunctionVersion: uriInfo.Function.Version}
+		}
 		data := ResponseData{ID: strconv.FormatUint(id, 10), Status: s.Code(), Stack: stack}
 		return &RuntimeResponse{Body: data}
 	}

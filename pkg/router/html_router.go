@@ -48,33 +48,39 @@ import (
 
 func htmlRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	r := caller.Call(uriInfo, ctx)
+	// Function execute error.
+	if r.Body.Status != status.OK.Code() {
+		onError(ctx, r)
+		return
+	}
+
+	// HTTP status code is not '200'.
 	if r.Code != 200 {
 		onInformal(ctx, r)
 		return
 	}
 
-	// Function execute error.
-	if r.Body.Status != status.OK.Code() {
-		onError(ctx, r)
-	}
-
 	// Set response headers.
-	for name, value := range *r.Headers {
-		ctx.Response.Header.Add(name, value)
+	if r.Headers != nil {
+		for name, value := range *r.Headers {
+			ctx.Response.Header.Add(name, value)
+		}
 	}
 
 	// Set response cookies.
-	for _, current := range r.Cookies {
-		c := fasthttp.Cookie{}
-		c.SetKey(current.Name)
-		c.SetValue(current.Value)
-		c.SetDomain(current.Domain)
-		c.SetPath(current.Path)
-		c.SetExpire(time.Unix(int64(current.Expires), 10))
-		c.SetMaxAge(int(current.MaxAge))
-		c.SetSecure(current.Secure)
-		c.SetHTTPOnly(current.HttpOnly)
-		ctx.Response.Header.SetCookie(&c)
+	if r.Cookies != nil {
+		for _, current := range r.Cookies {
+			c := fasthttp.Cookie{}
+			c.SetKey(current.Name)
+			c.SetValue(current.Value)
+			c.SetDomain(current.Domain)
+			c.SetPath(current.Path)
+			c.SetExpire(time.Unix(int64(current.Expires), 10))
+			c.SetMaxAge(int(current.MaxAge))
+			c.SetSecure(current.Secure)
+			c.SetHTTPOnly(current.HttpOnly)
+			ctx.Response.Header.SetCookie(&c)
+		}
 	}
 
 	// Set request id and status to the response header.
