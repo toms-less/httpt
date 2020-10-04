@@ -2,46 +2,52 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
 )
 
-// TriggerConfig is the struct of configurations.
-type TriggerConfig struct {
+const httptConfigFile = "config/httpt.json"
+
+// Config variable.
+var Config *HttptConfig
+
+// HttptConfig structure.
+// Httpt configuration.
+type HttptConfig struct {
+	// Server configuration
 	Server ServerConfig
+
+	// Show stack in the data.
+	Stack bool
 }
 
-func parseServerConfig(path *string) (*TriggerConfig, error) {
-	if path == nil {
-		return nil, fmt.Errorf("Server config file path is nil")
-	}
-
+func parseServerConfig(path *string) error {
 	content, err := ioutil.ReadFile(*path)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	triggerConfig := TriggerConfig{}
-	err = json.Unmarshal(content, &triggerConfig)
+	Config = &HttptConfig{}
+	err = json.Unmarshal(content, Config)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	return &triggerConfig, nil
+	return nil
 }
 
-// Init is the function to initialize configuarions.
-func Init() (*TriggerConfig, error) {
+// Init function.
+// Initialize configuarion.
+func Init() error {
 	path, pathError := os.Getwd()
 	if pathError != nil {
-		return nil, pathError
+		return pathError
 	}
 
-	path = path + "/" + TriggerConfigFile
-	triggerConfig, readConfigError := parseServerConfig(&path)
-	if readConfigError != nil {
-		return nil, readConfigError
+	path = path + "/" + httptConfigFile
+	readError := parseServerConfig(&path)
+	if readError != nil {
+		return readError
 	}
 
-	return triggerConfig, nil
+	return nil
 }

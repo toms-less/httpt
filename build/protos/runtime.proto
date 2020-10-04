@@ -1,0 +1,406 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.toms.less.server";
+option java_outer_classname = "RuntimeProto";
+option go_package = "build/protos/runtime";
+package protos;
+
+service RuntimeService {
+    rpc Route (RuntimeRequest) returns (RuntimeResponse);
+}
+
+message RuntimeRequest {
+    /**
+     * Request type.
+     */
+    Common.Type type = 1;
+
+    /**
+     * Request ID.
+     */
+    string id = 2;
+
+    /**
+     * Data of function calling.
+     */
+    CallRequest call = 3;
+
+    /**
+     * Data of function script updating.
+     */
+    repeated ScriptRequest script = 4;
+}
+
+message CallRequest {
+    /**
+     * Function calling type.
+     */
+    Common.CallType type = 1;
+
+    /**
+     * Function name.
+     */
+    string function = 2;
+
+    /**
+     * Function version.
+     */
+    string version = 3;
+
+    /**
+     * Function group.
+     */
+    string group = 4;
+
+    /**
+     * Function unit.
+     */
+    string unit = 5;
+
+    /**
+     * Timeout value of client specified to tell runtime the function calling timeout.
+     */
+    int32 timeout = 6;
+
+    /**
+     * HTTP requesting method.
+     */
+    string method = 7;
+
+    /**
+     * HTTP content type.
+     */
+    string contentType = 8;
+
+    /**
+     * HTTP requesting headers.
+     */
+    map<string,string> headers = 9;
+
+    /**
+     * HTTP requesting parameters.
+     */
+    map<string,string> parameters = 10;
+
+    /**
+     * HTTP requesting cookies.
+     */
+    repeated Cookie cookies = 11;
+
+    /**
+     * HTTP requesting data.
+     */
+    string data = 12;
+}
+
+message ScriptRequest {
+    /**
+     * Module group.
+     */
+    string group = 1;
+
+    /**
+     * Module unit.
+     */
+    string unit = 2;
+
+    /**
+     * Script type.
+     */
+    enum ScriptType {
+        JAVASCRIPT = 0;
+        JAVA = 1;
+    }
+
+    /**
+     * Action type.
+     */
+     enum ActionType {
+        UPDATE = 0;
+        DELETE = 1;
+        ADD = 2;
+    }
+    ActionType action = 3;
+
+    /**
+     * JavaScript scripts.
+     */
+    JavaScript javascript = 4;
+}
+
+message JavaScript {
+    /**
+     * Module name.
+     */
+    string name = 1;
+
+    /**
+     * Function name.
+     */
+    string function = 2;
+
+    /**
+     * Module version.
+     */
+     string version = 3;
+
+    /**
+     * Module specifier.
+     */
+    string specifier = 4;
+
+    /**
+     * Repository of this system.
+     * It retrives project code and processes it, then jsr runtime
+     * retrives the processed project code.
+     */
+    string repository = 5;
+
+    /**
+     * Repository namespace.
+     */
+    string namespace = 6;
+
+    /**
+     * 'workspace.jsr' file content in the root of user project.
+     */
+    WorkspaceJsr workspace = 7;
+}
+
+message WorkspaceJsr {
+    /**
+     * Project name.
+     */
+    string name = 1;
+
+    /**
+     * Project repository.
+     * This repository is defined in 'workspace.jsr'.
+     * It means the repository of user project and is used to
+     * retrive project code is this system.
+     */
+    string repository = 2;
+
+    /**
+     * Project license.
+     */
+    string license = 3;
+
+    /**
+     * Project contributors.
+     */
+    repeated string contributors = 4;
+
+    /**
+     * Project dependencies.
+     */
+    repeated DependencyJsr dependencies = 5;
+}
+
+message DependencyJsr {
+    /**
+     * Dependency name.
+     */
+    string name = 1;
+
+    /**
+     * Dependency version.
+     */
+    string version = 2;
+}
+
+message RuntimeResponse {
+    /**
+     * Response type.
+     */
+    Common.Type type = 1;
+
+    /**
+     * Response status.
+     */
+    Common.Status status = 2;
+
+    /**
+     * Detail description of 'Common.Status'.
+     */
+     string message = 3;
+
+    /**
+     * Response ID.
+     * Responsing ID is same as requesting ID.
+     */
+    string id = 4;
+
+    /**
+     * Data of function responsing.
+     */
+    CallResponse call = 5;
+    
+    /**
+     * Data of script responsing.
+     */
+    ScriptResponse script = 6;
+}
+
+message CallResponse {
+    /**
+     * Function name.
+     */
+    string function = 1;
+
+    /**
+     * Function version.
+     */
+    string version = 2;
+
+    /**
+     * Function group.
+     */
+    string group = 3;
+
+    /**
+     * Function unit.
+     */
+    string unit = 4;
+
+    /**
+     * Runtime type of current runtime.
+     */
+    string runtime = 5;
+
+    /**
+     * HTTP responsing status. 
+     * '200', '500', '404'...
+     */
+    int32 status = 6;
+
+    /**
+     * HTTP responsing type.
+     */
+    string contentType = 7;
+
+    /**
+     * HTTP responsing headers.
+     */
+    map<string,string> headers = 8;
+
+    /**
+     * HTTP requesting cookies.
+     */
+    repeated Cookie cookies = 9;
+
+    /**
+     * HTTP responsing data.
+     */
+    string data = 10;
+}
+
+message Cookie {
+    /**
+     * cookie name.
+     */
+    string name = 1;
+
+    /**
+     * cookie value.
+     */
+    string value = 2;
+
+    /**
+     * cookie domain.
+     */
+    string domain = 3;
+
+    /**
+     * cookie path.
+     */
+    string path = 4;
+
+    /**
+     * cookie expires.
+     */
+    int64 expires = 5;
+
+    /**
+     * cookie max age.
+     */
+    int64 maxAge = 6;
+
+    /**
+     * cookie secure.
+     */
+    bool secure = 7;
+
+    /**
+     * cookie http only.
+     */
+    bool httpOnly = 8;
+}
+
+message ScriptResponse {
+    /**
+     * Function name.
+     */
+    string function = 1;
+
+    /**
+     * Function version.
+     */
+    string version = 2;
+ 
+    /**
+     * Function group.
+     */ 
+    string group = 3;
+ 
+    /**
+     * Function unit.
+     */
+    string unit = 4;
+ 
+    /**
+     * Runtime type of current runtime.
+     */
+    string runtime = 5;
+}
+
+message Common {
+    /**
+     * Request or response type, default is 'UNKNOWN' if not be specified.
+     * 1. 'CALL' means function calling.
+     * 2. 'SCRIPT' means function script updating.
+     */
+    enum Type {
+        UNKNOWN = 0;
+        CALL = 1;
+        SCRIPT =2;
+    }
+
+    /**
+     * Request or response status, default is 'OK' if not be specified. 
+     * 1. 'INIT' means the requesting or responsing has been initialized.
+     * 2. 'OK' means function calling or script updating is OK.
+     * 3. 'TIMEOUT' means function calling or script updating is timeout.
+     * 4. 'INVALID_TYPE' means requesting type from client is invalid.
+     * 5. 'SYSTEM_ERROR' means function calling or script updating has happened some system errors.
+     * 6. 'USER_ERROR' means function calling or script updating has happened some user errors.
+     */
+    enum Status {
+        INIT = 0;
+        OK = 1;
+        TIMEOUT = 2;
+        SYSTEM_ERROR = 3;
+        USER_ERROR = 4;
+    }
+
+    /**
+     * Function calling type, default is 'HTTP' if not be specified.
+     * 1. 'HTTP' means HTTP calling.
+     * 2. 'INNER' means inner calling from one function to another.
+     */
+    enum CallType {
+        HTTP = 0;
+        INNER = 1;
+    }
+}

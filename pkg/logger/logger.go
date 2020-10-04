@@ -7,8 +7,13 @@ import (
 	"github.com/jeanphorn/log4go"
 )
 
-const LOG_CONFIG_FILE = "/config/log.json"
+const (
+	configFile = "/config/log.json"
+	serverLog  = "server.log"
+	routeLog   = "route.log"
+)
 
+// Init configuration module.
 func Init() {
 	//read log configuration from 'config/log.json'.
 	path, error := os.Getwd()
@@ -17,13 +22,15 @@ func Init() {
 		os.Exit(1)
 
 	}
-	log4go.LoadConfiguration(path + LOG_CONFIG_FILE)
+	log4go.LoadConfiguration(path + configFile)
 }
 
-func InitSpecific(path string) {
-	log4go.LoadConfiguration(path)
+// GetServerLogger is to get the logger handler of server.
+func GetServerLogger() *log4go.Filter {
+	return log4go.LOGGER(serverLog)
 }
 
-func GetLogger(category string) *log4go.Filter {
-	return log4go.LOGGER(category)
+// GetRouteLogger is to get the logger handler of router.
+func GetRouteLogger() *log4go.Filter {
+	return log4go.LOGGER(routeLog)
 }

@@ -1,22 +1,113 @@
 package caller
 
 import (
-	"fmt"
-	"httpt/pkg/services"
+	"context"
+	pb "httpt/build/protos/runtime"
+	"httpt/pkg/config"
+	"httpt/pkg/runtime"
+	"httpt/pkg/status"
+	"httpt/pkg/uri"
+	"strconv"
+	"time"
+
+	"github.com/valyala/fasthttp"
+	"google.golang.org/grpc"
 )
 
-// Call function's parameter is key like the formation of "Cell:Unit:FunctionName:Version".
-func Call(key *string) (*CallResult, error) {
-	if key == nil {
-		return nil, fmt.Errorf("function service key is nil")
+// Call function.
+// Call user function in the runtimes.
+func Call(uriInfo *uri.UriInfo, request *fasthttp.RequestCtx) *RuntimeResponse {
+	key := uriInfo.Group + uriInfo.Function.Unit + uriInfo.Function.Name + uriInfo.Function.Version
+	host := runtime.GetRuntime(&key)
+
+	// Set up a connection to the server.
+	conn, err := grpc.Dial(host.Address(), grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		return innerError(status.RuntimeConnectError, uriInfo, request.ID(), err)
 	}
-	host := services.GetService(key)
-	return remoteCall(&host.IP, host.Port)
+	defer conn.Close()
+	client := pb.NewRuntimeServiceClient(conn)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+
+	// Build all headers.
+	headers := map[string]string{}
+	request.Request.Header.VisitAll(func(key, value []byte) {
+		headers[string(key)] = string(value)
+	})
+
+	// Build all parameters.
+	parameters := map[string]string{}
+	request.Request.URI().QueryArgs().VisitAll(func(key, value []byte) {
+		parameters[string(key)] = string(value)
+	})
+
+	// Build all cookies.
+	cookies := []*pb.Cookie{}
+	request.Request.Header.VisitAllCookie(func(key, value []byte) {
+		cookie := fasthttp.AcquireCookie()
+		defer fasthttp.ReleaseCookie(cookie)
+		cookie.ParseBytes(value)
+		cookies = append(cookies, &pb.Cookie{Name: string(cookie.Key()), Value: string(cookie.Value()), Domain: string(cookie.Domain()), Path: string(cookie.Path()), Expires: cookie.Expire().Unix(), MaxAge: int64(cookie.MaxAge()), Secure: cookie.Secure(), HttpOnly: cookie.HTTPOnly()})
+	})
+
+	// Build request.
+	callRequest := pb.CallRequest{Type: 0, Function: uriInfo.Function.Name, Version: uriInfo.Function.Version, Group: uriInfo.Group,
+		Unit: uriInfo.Function.Unit, Timeout: uriInfo.Timeout,
+		Method: string(request.Method()), ContentType: string(request.Request.Header.ContentType()), Headers: headers,
+		Parameters: parameters, Cookies: cookies, Data: string(request.Request.Body())}
+
+	runtimeRequest := pb.RuntimeRequest{Type: 1, Id: strconv.FormatUint(request.ID(), 10),
+		Call: &callRequest}
+
+	// Request runtime.
+	r, err := client.Route(ctx, &runtimeRequest)
+	if err != nil {
+		return innerError(status.RuntimeCallError, uriInfo, request.ID(), err)
+	}
+
+	uri := string(request.URI().RequestURI())
+	switch r.Status {
+	case pb.Common_OK:
+		return ok(r, &uri)
+	case pb.Common_TIMEOUT:
+		return callError(status.RuntimeExecuteTimeout, r, &uri)
+	case pb.Common_INIT:
+		return callError(status.RuntimeExecuteNotInited, r, &uri)
+	case pb.Common_SYSTEM_ERROR:
+		return callError(status.RuntimeExecuteSystemError, r, &uri)
+	case pb.Common_USER_ERROR:
+		return callError(status.RuntimeExecuteUserError, r, &uri)
+	}
+	return callError(status.UnKnownError, r, &uri)
 }
 
-func remoteCall(ip *string, port int) (*CallResult, error) {
-	//mock a data for dev.
-	//TODO: use GRPC for remoting function call.
-	result := CallResult{ID: "1572619136028", Responsor: Responsor{Cell: "cell1", Unit: "unit1", Function: Function{Name: "test1", Version: "1.0", Language: "JavaScript"}}, Success: true, Data: "function call result."}
-	return &result, nil
+func ok(r *pb.RuntimeResponse, uri *string) *RuntimeResponse {
+	stack := ResponseStack{Status: status.OK.Code(), Message: status.OK.Message(), Group: r.Call.Group, Unit: r.Call.Unit, URI: *uri, Function: r.Call.Function, FunctionVersion: r.Call.Version, Runtime: r.Call.Runtime}
+	if config.Config.Stack {
+		data := ResponseData{ID: r.Id, Status: status.OK.Code(), Data: r.Call.Data, Stack: stack}
+		return &RuntimeResponse{Body: data, ContentType: TypeOf(&r.Call.ContentType), Code: r.Call.Status, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
+	}
+	data := ResponseData{ID: r.Id, Status: status.OK.Code(), Data: r.Call.Data}
+	return &RuntimeResponse{Body: data, ContentType: TypeOf(&r.Call.ContentType), Code: r.Call.Status, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
+}
+
+func callError(s *status.Status, r *pb.RuntimeResponse, uri *string) *RuntimeResponse {
+	stack := ResponseStack{Status: s.Code(), Message: s.Message(), Detail: r.Message, Group: r.Call.Group, Unit: r.Call.Unit, URI: *uri, Function: r.Call.Function, FunctionVersion: r.Call.Version, Runtime: r.Call.Runtime}
+	if config.Config.Stack {
+		data := ResponseData{ID: r.Id, Status: s.Code(), Data: r.Call.Data, Stack: stack}
+		return &RuntimeResponse{Body: data, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
+	}
+	data := ResponseData{ID: r.Id, Status: s.Code(), Data: r.Call.Data}
+	return &RuntimeResponse{Body: data, Headers: &r.Call.Headers, Cookies: r.Call.Cookies}
+}
+
+func innerError(s *status.Status, uriInfo *uri.UriInfo, id uint64, err error) *RuntimeResponse {
+	stack := ResponseStack{Status: s.Code(), Message: s.Message(), Detail: err.Error(), Group: uriInfo.Group, Unit: uriInfo.Function.Unit, URI: uriInfo.URI, Function: uriInfo.Function.Name, FunctionVersion: uriInfo.Function.Version}
+	if config.Config.Stack {
+		data := ResponseData{ID: strconv.FormatUint(id, 10), Status: s.Code(), Stack: stack}
+		return &RuntimeResponse{Body: data}
+	}
+	data := ResponseData{ID: strconv.FormatUint(id, 10), Status: s.Code()}
+	return &RuntimeResponse{Body: data}
 }

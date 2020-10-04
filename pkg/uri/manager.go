@@ -1,26 +1,26 @@
 package uri
 
 import (
-	"sync"
+	"httpt/pkg/common"
 )
 
 // key: "URI" value: UriInfo
-var cache sync.Map
+var cache common.ConcurrentMap
 
 // Init function.
 func Init() error {
 	//initialize cache.
 	// mock a configuration for dev.
-	uriInfo := URIInfo{URI: "/toms/test", Version: "1571814611", Timeout: 5000, Cell: "cell1", Mock: "{\"code\":0,\"msg\":\"成功\"}", Function: FunctionInfo{Unit: "unit1", Name: "test", Version: "1571814611"}}
-	cache.Store("/toms/test", uriInfo)
+	uriInfo := UriInfo{URI: "/toms/test", Version: "1571814611", Timeout: 5000, Group: "group1", Mock: "{\"status\":12345678,\"data\":111}", Strategy: 0, Function: FunctionInfo{Unit: "unit1", Name: "test", Version: "1571814611", Runtime: 0}}
+	cache.Put("/toms/test", uriInfo)
 	return nil
 }
 
-// GetURIInfo function.
-func GetURIInfo(uri *string) *URIInfo {
-	uriInfo, _ := cache.Load(*uri)
+// GetUriInfo function.
+func GetUriInfo(uri *string) *UriInfo {
+	uriInfo, _ := cache.Get(*uri)
 	switch value := uriInfo.(type) {
-	case URIInfo:
+	case UriInfo:
 		return &value
 	case nil:
 	default:
@@ -31,10 +31,10 @@ func GetURIInfo(uri *string) *URIInfo {
 
 // DeleteURIInfo function.
 func DeleteURIInfo(uri *string) {
-	cache.Delete(*uri)
+	cache.Remove(*uri)
 }
 
 // UpdateURICache function.
-func UpdateURICache(uri string, uriInfo *URIInfo) {
-	cache.Store(uri, *uriInfo)
+func UpdateURICache(uri string, uriInfo *UriInfo) {
+	cache.Put(uri, *uriInfo)
 }

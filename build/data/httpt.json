@@ -2,6 +2,7 @@
 	"server": {
 		"cell": "cell01",
 		"unit": "unit01",
-		"port": 6666
-	}
+		"port": 8888
+	},
+	"stack": true
 }
