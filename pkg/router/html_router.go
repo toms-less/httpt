@@ -88,6 +88,6 @@ func htmlRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	// to avoid the user set 'id' and 'status' in the header.
 	// This can override the user's 'id' and 'status'.
 	ctx.Response.Header.Set(idHeader, strconv.FormatUint(ctx.ID(), 10))
-	ctx.Response.Header.Set(statusHeader, strconv.Itoa(status.InvalidJSON.Code()))
+	ctx.Response.Header.Set(statusHeader, strconv.Itoa(status.OK.Code()))
 	fmt.Fprintf(ctx, r.Body.Data)
 }

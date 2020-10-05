@@ -245,24 +245,20 @@ func onError(ctx *fasthttp.RequestCtx, r *caller.RuntimeResponse, err ...error) 
 	if len(err) == 1 {
 		errStr = err[0].Error()
 	} else {
-		if r.Body.Stack == nil {
-			errStr = status.String(r.Body.Status)
-		} else {
-			errStr = r.Body.Stack.Detail
-		}
+		errStr = r.Body.Stack.Detail
 	}
 	logger.GetRouteLogger().Error("Route error [%s], API [%s], request headers [%v], request data [%s].", errStr, string(ctx.URI().RequestURI()), strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
 
 	// Response to client.
 	ctx.Response.Header.Add(idHeader, strconv.FormatUint(ctx.ID(), 10))
-	ctx.Response.Header.Add(statusHeader, strconv.Itoa(status.InvalidJSON.Code()))
+	ctx.Response.Header.Add(statusHeader, strconv.Itoa(r.Body.Status))
 	ctx.Response.Header.Set(contentType, "text/html; charset=utf-8")
 
 	idLine := "<div>id: " + strconv.FormatUint(ctx.ID(), 10) + "</div>"
-	statusLine := "<div>status: " + strconv.Itoa(status.InvalidJSON.Code()) + "</div>"
+	statusLine := "<div>status: " + strconv.Itoa(r.Body.Status) + "</div>"
 
 	if config.Config.Stack {
-		messageLine := "<div>message: " + status.InvalidJSON.Message() + "</div>"
+		messageLine := "<div>message: " + status.String(r.Body.Status) + "</div>"
 		var detailLine string
 		if len(err) == 1 {
 			detailLine = "<div>detail: " + err[0].Error() + "</div>"

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"httpt/pkg/caller"
+	"httpt/pkg/config"
 	"httpt/pkg/logger"
 	"httpt/pkg/status"
 	"httpt/pkg/uri"
@@ -54,13 +55,7 @@ import (
 func jsonRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	r := caller.Call(uriInfo, ctx)
 	if r.Body.Status != status.OK.Code() {
-		var err string
-		if r.Body.Stack == nil {
-			err = status.String(r.Body.Status)
-		} else {
-			err = r.Body.Stack.Detail
-		}
-		logger.GetRouteLogger().Error("Route error [%s], API [%s], request headers [%v], request data [%s].", err, string(ctx.URI().RequestURI()), strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
+		logger.GetRouteLogger().Error("Route error [%s], API [%s], request headers [%v], request data [%s].", r.Body.Stack.Detail, string(ctx.URI().RequestURI()), strings.Trim(strings.Replace(string(ctx.Request.Header.Header()), "\r\n", "  ", -1), " "), string(ctx.Request.Body()))
 	}
 
 	if r.Body.Status == status.OK.Code() && r.Code != 200 {
@@ -69,6 +64,9 @@ func jsonRoute(ctx *fasthttp.RequestCtx, uriInfo *uri.UriInfo) {
 	}
 
 	// Serialize data.
+	if !config.Config.Stack {
+		r.Body.Stack = nil
+	}
 	data, err := json.Marshal(&r.Body)
 	if err != nil {
 		onError(ctx, r, err)
